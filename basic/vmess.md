@@ -21,9 +21,11 @@ V2Ray 使用 inbound 和 outbound 的概念，这个概念非常清晰地体现�
 ![](/resource/images/formatdemo.gif)
 
 对于 Linux 有一个软件叫 jq，可以执行这样的指令检查配置文件的语法是否正确：
+
 ```
 $ jq . config.json
 ```
+
 这里的 config.json 是当前目录下的 config.json。特别注意命令中的点 . 不能省去。
 
 ![](/resource/images/jqdemo.png)
@@ -35,7 +37,7 @@ $ jq . config.json
 
 ## 配置
 
-以下给出了 VMess 的配置文件，包含客户端和服务器端，将你的配置替换成下面给出的配置即可正常使用（注意服务器地址须按你的实际情况修改）。修改完配置之后要重启 V2Ray 才能使用新配置生效。
+以下给出了 VMess 的配置文件，包含客户端和服务端，将你的配置替换成下面给出的配置即可正常使用（注意服务器地址须按你的实际情况修改）。修改完配置之后要重启 V2Ray 才能使用新配置生效。
 
 **另外再强调一遍，V2Ray 的认证基于时间，请确保服务器和客户端的时间准确，误差一分钟内即可**
 
@@ -56,10 +58,10 @@ $ jq . config.json
       "vnext": [
         {
           "address": "serveraddr.com", // 服务器地址，请修改为你自己的服务器 ip 或域名
-          "port": 16823,  // 服务器端口
+          "port": 16823,  // 服务器配置端口
           "users": [
             {
-              "id": "b831381d-6324-4d53-ad4f-8cda48b30811",  // 用户 ID，必须与服务器端配置相同
+              "id": "b831381d-6324-4d53-ad4f-8cda48b30811",  // 用户ID，必须与服务器端配置相同
               "alterId": 64 // 此处的值也应当与服务器相同
             }
           ]
@@ -71,6 +73,7 @@ $ jq . config.json
 ```
 
 在配置当中，有一个 id（在这里的例子是 b831381d-6324-4d53-ad4f-8cda48b30811），作用类似于 Shadowsocks 的密码（password）, VMess 的 id 使用的是 UUID。关于 id 或者 UUID 没必要了解很多，在这里只要清楚以下几点就足够了：
+
 * 相对应的 VMess 传入传出的 id 必须相同（如果你不理解这句话，那么可以简单理解成服务器与客户端的 id 必须相同）
 * 由于 id 使用的是 UUID，我们可以使用任何 UUID 生成工具生成 UUID 作为这里的 id。比如 [UUID Generator](https://www.uuidgenerator.net/) 这个网站，只要一打开或者刷新这个网页就可以得到一个 UUID，如下图
 
@@ -109,9 +112,11 @@ $ jq . config.json
 
 再看 outbound，protocol 是 vmess，说明 V2Ray 接收到数据包之后要将数据包打包成 [VMess](https://www.v2ray.com/chapter_03/01_effective.html#vmess-%E5%8D%8F%E8%AE%AE) 协议并且使用预设的 id 加密（这个例子 id 是 b831381d-6324-4d53-ad4f-8cda48b30811），然后发往服务器地址为 serveraddr.com 的 16823 端口。服务器地址 address 可以是域名也可以是 IP，只要正确就可以了。
 
+对于客户端即开启了一个本地 socks 代理，监听本地1080端口，将本地的socks流量转发到服务器。
+
 ### 服务器
 
-接着看服务器，服务器配置的 id 是 b831381d-6324-4d53-ad4f-8cda48b30811，所以 V2Ray 服务器接收到客户端发来的数据包时就会尝试用 b831381d-6324-4d53-ad4f-8cda48b30811 解密，如果解密成功再看一下时间对不对，对的话就把数据包发到 outbound 去，outbound.protocol 是 freedom（freedom 的中文意思是自由，在这里姑且将它理解成直连吧），数据包就直接发到 google.com 了。
+对于 V2Ray 服务端，服务器配置的 id 是 `b831381d-6324-4d53-ad4f-8cda48b30811`，所以 V2Ray 服务器接收到客户端发来的数据包时就会尝试用 `b831381d-6324-4d53-ad4f-8cda48b30811` 解密，如果解密成功再看一下时间对不对，对的话就把数据包发到 outbound 去，outbound.protocol 是 freedom（freedom 的中文意思是自由，在这里姑且将它理解成直连吧），数据包就直接发到 google.com 了。
 
 配置中的 alterId 也是作为认证的，具体请看 [V2Ray 用户手册](https://www.v2ray.com/chapter_03/01_effective.html#alterid)。只要确保服务器和客户端配置文件的 alterId 相同就行了，但要注意 alterId 的值越大会使用 V2Ray 占用更多的内存。根据我的经验，对于一般用户来说，alterId 的值设为 50 到 100 之间应该是比较合适的。
 

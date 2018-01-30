@@ -94,6 +94,7 @@ mKCP 的配置比较简单，只需在服务器的 inbound 和 客户端的 outb
 ### 说明
 
 在上面的配置当中，与之前相比主要的变化在于多了一个 streamSettings，包含有不少参数：
+
 * `network`: 网络的选择，要像上面的配置写成 kcp 才会启用 mKCP
 * `kcpSettings`: 包含一些关于 mKCP 设置的参数，有
   * `uplinkCapacity`: 上行链路容量，将决定 V2Ray 向外发送数据包的速率。单位为 MB
@@ -105,4 +106,4 @@ mKCP 的配置比较简单，只需在服务器的 inbound 和 客户端的 outb
 
 还有一个 header 参数可以对 mKCP 进行伪装，这是 mKCP 的一个优势。具体的伪装在 type 参数设置，type 可以设置成 utp、srtp、wechat-video 或者 none，这四个可以分别将 mKCP 数据伪装成 BT 下载、视频通话、微信视频通话以及不进行伪装。**这里的 type 参数，客户端与服务器要一致**
 
-至于上述配置里有但是我没有说明的参数，是 V2Ray 的默认值，我个人建议是保持默认。如果你需要了解或者修改，请参考手册。
+至于上述配置里有但是我没有说明的参数，是 V2Ray 的默认值，我个人建议是保持默认。如果你需要了解或者修改，请参考[手册](https://www.v2ray.com/chapter_02/transport/mkcp.html)。
